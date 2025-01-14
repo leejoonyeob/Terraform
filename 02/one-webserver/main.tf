@@ -5,7 +5,7 @@ provider "aws" {
 
 # EC2 인스턴스를 위한 Security Group 생성
 resource "aws_security_group" "allow_8080" {
-  name        = "allow_8080"
+  name        = var.security_group_name
   description = "Allow 8080 inbound traffic and all outbound traffic"
 
   tags = {
@@ -13,13 +13,24 @@ resource "aws_security_group" "allow_8080" {
   }
 }
 
+# variable "security_group_name" {
+#   description = "The name of the security group"
+#   type        = string
+#   default     = "terraform-example-instance"
+# }
+
+# output "public_ip" {
+#   value       = aws_instance.example.public_ip
+#   description = "The public IP of the Instance"
+# }
+
 # Security Group에 추가할 규칙 추가
-resource "aws_vpc_security_group_ingress_rule" "allow_http_8080" {
+resource "aws_vpc_security_group_ingress_rule" "allow_httssp_8080" {
   security_group_id = aws_security_group.allow_8080.id
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 8080
+  from_port         = var.server_port
   ip_protocol       = "tcp"
-  to_port           = 8080
+  to_port           = var.server_port
 }
 
 # EC2 인스턴스 생성
@@ -35,7 +46,7 @@ resource "aws_instance" "example" {
                 echo "hello, world" > index.html
                 nohup busybox httpd -f -p 8080 &
                 EOF
-
+                
   tags = {
     Name = "terraform-example"
   }
