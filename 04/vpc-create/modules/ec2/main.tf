@@ -1,4 +1,4 @@
-data "aws_ami" "myubuntu2024" {
+data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
@@ -11,14 +11,22 @@ data "aws_ami" "myubuntu2024" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Canonical
+  owners = ["099720109477"]
 }
 
-resource "aws_instance" "myec2" {
-  ami           = data.aws_ami.myubuntu2024.id
+# Instance 생성
+resource "aws_instance" "instance" {
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
-  tags = var.ec2_tag
-  subnet_id = var.subnet_id
-  associate_public_ip_address = true
-}
 
+  user_data = file("${path.module}/userdata.sh")
+
+  subnet_id              = var.subnet_id # Required
+  vpc_security_group_ids = var.vpc_security_group_ids
+
+  key_name = var.key_name
+
+  tags = {
+    Name = var.name
+  }
+}

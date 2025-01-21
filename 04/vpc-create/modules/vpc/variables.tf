@@ -1,42 +1,22 @@
-variable "vpc_id" {
-    default = "10.0.0.0/16"
-    description = "vpc_cidr"
-    type = string
+variable "cidr" {
+  description = "Cidr block of VPC"
+  type        = string
+  default     = "10.0.0.0/16"
 }
 
-variable "vpc_tag" {
-    default = {
-        Name = "myvpc"
-    }
-    description = "VPC tag" 
-    type = map(string)
+variable "name" {
+  description = "Name of VPC"
+  type        = string
+  default     = "myVPC"
 }
 
-variable "igw_tag" {
-    default = {
-        Name = "myigw"
-    }
-    description = "igw tag"
-    type = map(string)
+variable "availability_zone" {
+  description = "AZ for the subnet"
+  type        = string
 }
 
-variable "vpc_subnet"{
-    default = "10.0.1.0/24"
-    description = "vpc Public Subnet"
-}
-
-variable "subnet_tag" {
-    default = {
-        Name = "mySubnet"
-    }
-    description = "Public Subnet Tag"
-    type = map(string)
-}
-
-variable "route_table" {
-    default = {
-        Name = "route_table"
-    }
-    description = "Public route_table"
-    type = map(string)
+variable "public_subnet" {
+  description = "Cidr block of public subnet"
+  type        = string
+  default     = "10.0.1.0/24"
 }
