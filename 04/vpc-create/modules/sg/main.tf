@@ -1,26 +1,33 @@
-variable "instance_type" {
-  description = "Type of EC2 instance"
-  type        = string
-  default     = "t2.micro"
+# Security group 생성
+resource "aws_security_group" "allow_web" {
+  name        = "allow-web"
+  description = "Allow HTTP/HTTPS inbound traffic and all outbound traffic"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "allow-web"
+  }
 }
 
-variable "name" {
-  description = "Name of EC2 instance"
-  type        = string
-  default     = "myEC2"
+resource "aws_vpc_security_group_ingress_rule" "allow_web_HTTP" {
+  security_group_id = aws_security_group.allow_web.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
 }
 
-variable "subnet_id" {
-  description = "Subnet id to launch in"
-  type        = string
+
+resource "aws_vpc_security_group_ingress_rule" "allow_web_HTTPS" {
+  security_group_id = aws_security_group.allow_web.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 443
+  ip_protocol       = "tcp"
+  to_port           = 443
 }
 
-variable "vpc_security_group_ids" {
-  description = "List of security group IDs to associate with"
-  type        = list(string)
-}
-
-variable "key_name" {
-  description = "Key name of the Key Pair to use for the instance"
-  type        = string
+resource "aws_vpc_security_group_egress_rule" "allow_web" {
+  security_group_id = aws_security_group.allow_web.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
 }

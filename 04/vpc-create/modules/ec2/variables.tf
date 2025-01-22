@@ -1,28 +1,26 @@
 variable "instance_type" {
-    type        = string
-    default     = "t2.micro"
-    description = "EC2 instance type"
+  description = "Type of EC2 instance"
+  type        = string
+  default     = "t2.micro"
 }
-variable "ec2_tag" {
-    type        = map(string)
-    default     = {
-        Name = "myec2"
-    }
-    description = "EC2 instance tags"
+
+variable "name" {
+  description = "Name of EC2 instance"
+  type        = string
+  default     = "myEC2"
 }
-#필수 입력 사항
+
 variable "subnet_id" {
-    type        = string
-    description = "Subnet ID for EC2 instance"
+  description = "Subnet id to launch in"
+  type        = string
 }
 
-variable "sg_ids" {
-    type        = list(string)
-    description = "Security Group IDs"
+variable "vpc_security_group_ids" {
+  description = "List of security group IDs to associate with"
+  type        = list(string)
 }
 
-variable "keypair" {
-    type        = string
-    description = "EC2 keypair name"
+variable "key_name" {
+  description = "Key name of the Key Pair to use for the instance"
+  type        = string
 }
-
