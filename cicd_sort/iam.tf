@@ -57,12 +57,6 @@ resource "aws_iam_role_policy_attachment" "eb_service" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
 }
 
-# Elastic Beanstalk Service Role에 S3 삭제 권한 추가
-resource "aws_iam_role_policy_attachment" "eb_service_s3" {
-  role       = aws_iam_role.eb_service.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
-
 # CodeBuild Role
 resource "aws_iam_role" "codebuild" {
   name = "${var.project_name}-codebuild-role"

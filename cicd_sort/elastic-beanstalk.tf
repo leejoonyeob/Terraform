@@ -2,12 +2,6 @@
 resource "aws_elastic_beanstalk_application" "app" {
   name        = var.project_name
   description = "CICD Pipeline Application"
-
-  appversion_lifecycle {
-    service_role          = aws_iam_role.eb_service.arn
-    max_count            = 1
-    delete_source_from_s3 = true
-  }
 }
 
 # Elastic Beanstalk Environment
@@ -121,7 +115,7 @@ resource "aws_codebuild_project" "app" {
 
 # S3 Bucket for Artifacts
 resource "aws_s3_bucket" "artifacts" {
-  bucket        = "${var.project_name}-artifacts-${data.aws_caller_identity.current.account_id}"
+  bucket = "${var.project_name}-artifacts-${data.aws_caller_identity.current.account_id}"
   force_destroy = true
 }
 
@@ -130,34 +124,6 @@ resource "aws_s3_bucket_versioning" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
   versioning_configuration {
     status = "Enabled"
-  }
-}
-
-# S3 버킷 퍼블릭 액세스 차단 설정
-resource "aws_s3_bucket_public_access_block" "artifacts" {
-  bucket = aws_s3_bucket.artifacts.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-# S3 버킷 생명주기 규칙 설정
-resource "aws_s3_bucket_lifecycle_configuration" "artifacts" {
-  bucket = aws_s3_bucket.artifacts.id
-
-  rule {
-    id     = "cleanup"
-    status = "Enabled"
-
-    expiration {
-      days = 30
-    }
-
-    noncurrent_version_expiration {
-      noncurrent_days = 7
-    }
   }
 }
 
